@@ -1,21 +1,24 @@
-import { shallowMount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
 import AscendingCounter from "../AscendingCounter.vue";
+import { fireEvent, render, screen } from "@testing-library/vue";
 
 describe("ascending counter", () => {
-  it("counts from zero, up", async () => {
+  test("counts from zero, up", async () => {
     expect(AscendingCounter).toBeTruthy();
 
-    const wrapper = shallowMount(AscendingCounter);
+    // The `render` method renders the component into the document.
+    // It also binds to `screen` all the available queries to interact with
+    // the component.
+    render(AscendingCounter);
 
-    expect(wrapper.text()).toContain("0");
+    expect(screen.queryByText("0")).toBeTruthy();
 
-    await wrapper.get("button").trigger("click");
+    // getByText returns the first matching node for the provided text
+    // or throws an error.
+    const button = screen.getByText("0");
 
-    expect(wrapper.text()).toContain("1");
+    await fireEvent.click(button);
+    await fireEvent.click(button);
 
-    await wrapper.get("button").trigger("click");
-
-    expect(wrapper.text()).toContain("2");
+    expect(screen.queryByText("2")).toBeTruthy();
   });
 });
